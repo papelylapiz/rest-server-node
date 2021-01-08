@@ -1,49 +1,24 @@
 const express = require('express');
-const app= express();
-
+const app = express();
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 require('./config/config');
 
+//Configuro middleware para la recepción de datos desde las peticiones http
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
  
 // parse application/json
 app.use(bodyParser.json())
 
-
-app.get('/', (req,res)=>{
-    res.json('Hola mundo');
+app.use(require('./routes/usuario'));
+mongoose.connect(process.env.urlDB
+                            , {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }
+                            ,(err, client) => {
+    if(err) throw err;
+    console.log('Conectado a la BD cafe MONGO');
 });
-
-app.get('/usuario', (req,res)=>{
-    res.json('Consultar Usuario');
-});
-
-app.post('/usuario',(req,res)=>{
-    let body = req.body;
-    if(body.nombre===undefined){
-        res.status(400).json({
-            ok:false,
-            messaje:'El nombre es necesario'
-        })
-    }else{
-        res.json({
-            persona: body    
-        })
-    }
-});
-//Actualizar registros
-app.put('/usuario/:id', (req,res)=>{
-    let id = req.params.id;
-    res.json({
-        id
-    });
-});
-
-app.delete('/usuario', (req,res)  => {
-    res.json('Cambio de estado');
-})
 
 app.listen(process.env.PORT , ()=>{
     console.log(`Escuchando en el puerto ${process.env.PORT }`);
