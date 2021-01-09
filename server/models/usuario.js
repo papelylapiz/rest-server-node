@@ -49,7 +49,7 @@ usuarioSchema.methods.toJSON = function(){
     delete userObject.password;
     return userObject;
 }
-
+//Para poder mostrar mensaje de validación definidos en los campos
 usuarioSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser unico' });
 
 module.exports = mongoose.model('Usuario', usuarioSchema);

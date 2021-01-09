@@ -3,14 +3,21 @@ const bcrypt = require('bcrypt')
 const _ = require('underscore')
 const app = express();
 const Usuario = require('../models/usuario');
+const { verificaToken, verificaAdminRole } = require('../middlewares/authentication');
 
 app.get('/', (req,res)=>{
     res.json('Hola mundo');
 });
 
 //Listar todos los usuarios
-app.get('/usuario', (req,res)=>{
-    
+app.get('/usuario', verificaToken ,(req,res)=>{
+    //Obtener el payload desde el token
+    /*return res.json({
+        usuario: req.usuario,
+        nombre: req.usuario.nombre,
+        email: req.usuario.email
+    });*/
+
     let desde = req.query.desde || 0;
     desde = Number(desde);
 
@@ -47,7 +54,7 @@ app.get('/usuario', (req,res)=>{
 
 });
 
-app.post('/usuario',(req,res)=>{
+app.post('/usuario', [verificaToken, verificaAdminRole ],(req,res)=>{
     
     let body = req.body;
 
@@ -88,7 +95,7 @@ app.post('/usuario',(req,res)=>{
 });
 
 //Actualizar registros
-app.put('/usuario/:id', (req,res)=>{
+app.put('/usuario/:id', [verificaToken, verificaAdminRole ], (req,res)=>{
     let id = req.params.id;
     
     let body = _.pick(req.body , ['nombre','email','img','role','estado']); // permite filtrar los campos que se quieres actualizar
@@ -117,7 +124,7 @@ app.put('/usuario/:id', (req,res)=>{
 });
 
 
-app.delete('/usuario/:id', (req,res)  => {
+app.delete('/usuario/:id', [verificaToken, verificaAdminRole ],(req,res)  => {
 
     let id = req.params.id;
 
