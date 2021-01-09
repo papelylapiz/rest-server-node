@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
+const hbs = require('hbs');
 
 require('./config/config');
 
@@ -13,11 +14,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+//Habilitar carpeta public
+app.use(express.static(path.resolve(__dirname, '../views')));
+
+// uso de handlerbar permite manejar archivos .hbs
+app.set('view engine', 'hbs'); 
+
 //Configuracion global de rutas
 app.use(require('./routes/index'));
-
-//Habilitar carpeta public
-app.use(express.static(path.resolve(__dirname, '../public')));
 
 mongoose.connect(process.env.urlDB, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }, (err, client) => {
     if (err) throw err;
