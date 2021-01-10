@@ -22,8 +22,13 @@ app.set('view engine', 'hbs');
 
 //Configuracion global de rutas
 app.use(require('./routes/index'));
-
-mongoose.connect(process.env.urlDB, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }, (err, client) => {
+let opt = { 
+    useNewUrlParser: true, 
+    useCreateIndex: true, 
+    useUnifiedTopology: true , 
+    useFindAndModify: false
+}
+mongoose.connect(process.env.urlDB, opt, (err, client) => {
     if (err) throw err;
     console.log('Conectado a la BD cafe MONGO');
 });
