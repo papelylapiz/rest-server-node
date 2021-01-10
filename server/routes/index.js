@@ -5,6 +5,8 @@ app.use(require('./usuario'));
 app.use(require('./login'));
 app.use(require('./categoria'));
 app.use(require('./producto'));
+app.use(require('./upload'));
+app.use(require('./imagenes'));
 
 app.get('/', (req,res)=>{
     res.render('index'//Indica cual es el nombre del archivo  
